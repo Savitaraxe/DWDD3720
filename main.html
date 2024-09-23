@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do App</h1>
+        
+        <!-- Form to add a new To-Do -->
+        <div class="form-group">
+            <input type="text" id="name" placeholder="Task Name">
+            <select id="status">
+                <option value="">Select Status</option>
+                <option value="active">Active</option>
+                <option value="complete">Complete</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            
+            <input type="text" id="category" placeholder="Category (Work, Home, etc.)">
+            <input type="date" id="dueDate" placeholder="Due Date (MM/DD/YYYY)">
+            <button id="addTodoBtn">Add To-Do</button>
+        </div>
+
+        <!-- Button to display all To-Dos -->
+        <div class="form-group">
+            <button id="displayTodosBtn">Display All To-Dos</button>
+            <br></br>
+            <button id="editMenuBtn">Edit Menu</button> <!-- New Edit Menu Button -->
+            <br></br>
+            <button id="clearTodosBtn">Clear All To-Dos</button>
+            <br></br>
+            <button id="removeCompletedBtn">Remove Completed To-Dos</button>
+
+
+        </div>
+
+        <!-- Display area for To-Do items -->
+        <div id="todoList"></div>
+    </div>
+
+    <!-- Reference to the external JS file -->
+    <script src="Model&Funcs.js"></script>
+    <script>
+        document.getElementById('addTodoBtn').addEventListener('click', function() {
+            const name = document.getElementById('name').value;
+            const status = document.getElementById('status').value;
+            const category = document.getElementById('category').value;
+            const dueDate = document.getElementById('dueDate').value;
+
+            if (name && status && category && dueDate) {
+                const newTodo = addTodo(name, status, category, dueDate);
+                
+                    document.getElementById('name').value = '';
+                    document.getElementById('status').value = '';
+                    document.getElementById('category').value = '';
+                    document.getElementById('dueDate').value = '';
+            }
+            
+
+            
+        });
+
+        document.getElementById('displayTodosBtn').addEventListener('click', function() {
+            const todoList = document.getElementById('todoList');
+            todoList.innerHTML = ''; // Clear previous list
+            todos.forEach(todo => {
+                const todoItem = document.createElement('div');
+                todoItem.classList.add('todo-item');
+                todoItem.innerHTML = 
+                `<strong>ID:</strong> ${todo.id} <br>
+                <strong>Name:</strong> ${todo.name} <br>
+                <strong>Status:</strong> ${todo.status} <br>
+                <strong>Category:</strong> ${todo.category} <br>
+                <strong>Due Date:</strong> ${todo.dueDate}`;
+                todoList.appendChild(todoItem);
+            });
+        });
+    </script>
+</body>
+</html>

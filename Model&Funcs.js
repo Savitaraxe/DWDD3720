@@ -1,48 +1,113 @@
-// Here is my data model for the ToDo app
+let todos = [];
+let currentEditId = null;
 
-// THIS IS MY IN-MEMORY DATA MODEL
-let todos = [ //I specified "todo(s) because I wanted to make this an array that we can access based on id"
-
-    {
-        id: 1, //This will hold the container for each ToDo project or Assignment, it's mean to help house each in a neat format
-        name: "name of the task or todo",
-        status: "status of the todo app", // "active", "complete" "inactive"
-        category: "what type of category will this todo be labeled as", // "Work" "Home" "School" "hobby" "relaxing" etc
-        dueDate: "what time variance do we want to include" // "MM/DD/YYYY" OR "MM/DD" OR "DD"
-    },
-    { //Example
-        id: 2,
-        name: "Finish project report",
-        status: "active",
-        category: "Work",
-        dueDate: "2024-09-22"
-    }
-];
-
-// Here is where my functions are that will be used to manipulate/add/remove from the data model
-
-// THESE ARE MY FUNCTIONS
-
-// THIS IS MY FIRST FUNCTION TO CREATE THE TODO
-
+// Function to add a new todo
 function addTodo(name, status, category, dueDate) {
-    const newTodo = { //this was why I wanted to make the array labeled as "todos" so that my function itself can be labeled "todo"
-        id: todos.length + 1,  // very easy way to add a new ID container to manipulate and create
-        name: name, //We will make the functions themselves hold the same variables that the user sees, or adding a basic extension like "idType" or "nameType" 
-        status: status,
-        category: category,
-        dueDate: dueDate
+    const newTodo = {
+        id: todos.length + 1,
+        name,
+        status,
+        category,
+        dueDate
     };
-    todos.push(newTodo);  // Allows us to easily append a new object to the array based on our function names
-    return newTodo;  // Return it so we can validate it's creation
+    todos.push(newTodo);
 }
 
-// THIS IS MY SECOND FUNCTION TO VIEW THE TODO
-
-function displayTodosAsMenu() {
-    console.log("Available Todos:"); // I wanted to allow the user to view every todo after they make it so that they can verify it's there.
+// Show all todos in the edit menu
+function showEditMenu() {
+    const todoList = document.getElementById('todoList');
+    todoList.innerHTML = '';
     todos.forEach(todo => {
-        console.log(`ID: ${todo.id}, Name: ${todo.name}, Status: ${todo.status}`); //Less information displayed on the initial menu makes it easier to view and manipulate especially on smaller devices
+        const todoItem = document.createElement('div');
+        todoItem.classList.add('todo-item', todo.status);
+        todoItem.innerHTML = `
+            <strong>ID:</strong> ${todo.id}, <strong>Task:</strong> ${todo.name}
+            <button onclick="editTodo(${todo.id})">Edit</button>
+            <div class="icon-container">
+                <img src="trash.png" alt="Delete" style="width: 40px; height: 40px; cursor: pointer;" onclick="deleteTodo(${todo.id})">
+            </div>
+        `;
+        todoList.appendChild(todoItem);
     });
 }
 
+// Edit a todo
+function editTodo(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        document.getElementById('name').value = todo.name;
+        document.getElementById('status').value = todo.status;
+        document.getElementById('category').value = todo.category;
+        document.getElementById('dueDate').value = todo.dueDate;
+        currentEditId = id;
+        document.getElementById('addTodoBtn').innerText = 'Save Changes';
+    }
+}
+
+// Delete a todo
+function deleteTodo(id) {
+    todos = todos.filter(todo => todo.id !== id);
+    showEditMenu(); // Refresh the edit menu display
+}
+
+// Handle adding or saving todo
+function handleTodoAction() {
+    const name = document.getElementById('name').value;
+    const status = document.getElementById('status').value;
+    const category = document.getElementById('category').value;
+    const dueDate = document.getElementById('dueDate').value;
+
+    if (currentEditId !== null) {
+        // If editing an existing todo
+        const todo = todos.find(t => t.id === currentEditId);
+        todo.name = name;
+        todo.status = status;
+        todo.category = category;
+        todo.dueDate = dueDate;
+
+        currentEditId = null; // Reset edit ID
+        document.getElementById('addTodoBtn').innerText = 'Add To-Do'; // Reset button text
+    } else if (name && status && category && dueDate) {
+        // If adding a new todo
+        addTodo(name, status, category, dueDate);
+    }
+
+    // Clear the input fields
+    document.getElementById('name').value = '';
+    document.getElementById('status').value = '';
+    document.getElementById('category').value = '';
+    document.getElementById('dueDate').value = '';
+}
+
+// Event listener for the "Add To-Do" button
+document.getElementById('addTodoBtn').addEventListener('click', handleTodoAction);
+
+// Event listener for the Enter key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        handleTodoAction();
+    }
+});
+
+// Clear all todos
+function clearAllTodos() {
+    todos = []; // Reset the todos array
+    showEditMenu(); // Refresh the edit menu display
+}
+
+// Event listener for the "Clear All To-Dos" button
+document.getElementById('clearTodosBtn').addEventListener('click', clearAllTodos);
+
+// Function to remove completed todos
+function removeCompletedTodos() {
+    todos = todos.filter(todo => todo.status !== "complete"); // Keep todos that are not complete
+    showEditMenu(); // Refresh the display after removal
+}
+
+// Add an event listener for the remove completed button
+document.getElementById('removeCompletedBtn').addEventListener('click', removeCompletedTodos);
+
+// Initial setup for event listeners for the edit menu and display buttons
+document.getElementById('editMenuBtn').addEventListener('click', showEditMenu);
+document.getElementById('displayTodosBtn').addEventListener('click', showEditMenu);
+  
