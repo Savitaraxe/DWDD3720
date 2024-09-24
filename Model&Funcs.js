@@ -16,38 +16,71 @@ function addTodo(name, status, category, dueDate) {
 // Show all todos in the edit menu
 function showEditMenu() {
     const todoList = document.getElementById('todoList');
-    todoList.innerHTML = '';
+    todoList.innerHTML = ''; // Clear current list
+    
     todos.forEach(todo => {
         const todoItem = document.createElement('div');
         todoItem.classList.add('todo-item', todo.status);
-        todoItem.innerHTML = `
-            <strong>ID:</strong> ${todo.id}, <strong>Task:</strong> ${todo.name}
-            <button onclick="editTodo(${todo.id})">Edit</button>
-            <div class="icon-container">
-                <img src="trash.png" alt="Delete" style="width: 40px; height: 40px; cursor: pointer;" onclick="deleteTodo(${todo.id})">
-            </div>
-        `;
+        
+        if (currentEditId === todo.id) {
+            // Editable task menu with the same "status" styling
+            todoItem.innerHTML = `
+                <strong>ID:</strong> ${todo.id} 
+                <input type="text" id="editName${todo.id}" value="${todo.name}" />
+                <select id="editStatus${todo.id}" class="status-dropdown">
+                    <option value="active" ${todo.status === 'active' ? 'selected' : ''}>Active</option>
+                    <option value="inactive" ${todo.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                    <option value="complete" ${todo.status === 'complete' ? 'selected' : ''}>Complete</option>
+                </select>
+                <input type="text" id="editCategory${todo.id}" value="${todo.category}" />
+                <input type="date" id="editDueDate${todo.id}" value="${todo.dueDate}" />
+                <button onclick="saveEdit(${todo.id})">Save</button>
+                <button onclick="cancelEdit()">Cancel</button>
+            `;
+        } else {
+            todoItem.innerHTML = `
+                <strong>ID:</strong> ${todo.id}, <strong>Task:</strong> ${todo.name}, <strong>Status:</strong> ${todo.status}
+                <button onclick="editTodo(${todo.id})">Edit</button>
+                <div class="icon-container">
+                    <img src="trash.png" alt="Delete" style="width: 40px; height: 40px; cursor: pointer;" onclick="deleteTodo(${todo.id})">
+                </div>
+            `;
+        }
+        
         todoList.appendChild(todoItem);
     });
 }
 
 // Edit a todo
 function editTodo(id) {
-    const todo = todos.find(t => t.id === id);
-    if (todo) {
-        document.getElementById('name').value = todo.name;
-        document.getElementById('status').value = todo.status;
-        document.getElementById('category').value = todo.category;
-        document.getElementById('dueDate').value = todo.dueDate;
-        currentEditId = id;
-        document.getElementById('addTodoBtn').innerText = 'Save Changes';
-    }
+    currentEditId = id; // Set the current edit ID
+    showEditMenu(); // Refresh the edit menu to show input fields for editing
 }
 
-// Delete a todo
-function deleteTodo(id) {
-    todos = todos.filter(todo => todo.id !== id);
-    showEditMenu(); // Refresh the edit menu display
+// Save the edited todo
+function saveEdit(id) {
+    const name = document.getElementById(`editName${id}`).value;
+    const status = document.getElementById(`editStatus${id}`).value; // Get the value from the dropdown
+    const category = document.getElementById(`editCategory${id}`).value;
+    const dueDate = document.getElementById(`editDueDate${id}`).value;
+
+    // Update the todo with new values
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.name = name;
+        todo.status = status; // Update status with selected value
+        todo.category = category;
+        todo.dueDate = dueDate;
+    }
+
+    currentEditId = null; // Reset the current edit ID
+    showEditMenu(); // Refresh the edit menu to show the updated task
+}
+
+// Cancel editing a todo
+function cancelEdit() {
+    currentEditId = null; // Reset the current edit ID
+    showEditMenu(); // Refresh the edit menu to revert back to display mode
 }
 
 // Handle adding or saving todo
@@ -57,18 +90,7 @@ function handleTodoAction() {
     const category = document.getElementById('category').value;
     const dueDate = document.getElementById('dueDate').value;
 
-    if (currentEditId !== null) {
-        // If editing an existing todo
-        const todo = todos.find(t => t.id === currentEditId);
-        todo.name = name;
-        todo.status = status;
-        todo.category = category;
-        todo.dueDate = dueDate;
-
-        currentEditId = null; // Reset edit ID
-        document.getElementById('addTodoBtn').innerText = 'Add To-Do'; // Reset button text
-    } else if (name && status && category && dueDate) {
-        // If adding a new todo
+    if (name && status && category && dueDate) {
         addTodo(name, status, category, dueDate);
     }
 
@@ -77,26 +99,15 @@ function handleTodoAction() {
     document.getElementById('status').value = '';
     document.getElementById('category').value = '';
     document.getElementById('dueDate').value = '';
+
+    showEditMenu(); // Refresh the menu to show the new task
 }
 
-// Event listener for the "Add To-Do" button
-document.getElementById('addTodoBtn').addEventListener('click', handleTodoAction);
-
-// Event listener for the Enter key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        handleTodoAction();
-    }
-});
-
-// Clear all todos
-function clearAllTodos() {
-    todos = []; // Reset the todos array
+// Delete a todo
+function deleteTodo(id) {
+    todos = todos.filter(todo => todo.id !== id);
     showEditMenu(); // Refresh the edit menu display
 }
-
-// Event listener for the "Clear All To-Dos" button
-document.getElementById('clearTodosBtn').addEventListener('click', clearAllTodos);
 
 // Function to remove completed todos
 function removeCompletedTodos() {
@@ -107,7 +118,15 @@ function removeCompletedTodos() {
 // Add an event listener for the remove completed button
 document.getElementById('removeCompletedBtn').addEventListener('click', removeCompletedTodos);
 
+// Clear all todos
+function clearAllTodos() {
+    todos = []; // Reset the todos array (completely empty it)
+    showEditMenu(); // Refresh the edit menu display
+}
+
+// Add an event listener for the "Clear All To-Dos" button
+document.getElementById('clearTodosBtn').addEventListener('click', clearAllTodos);
+
 // Initial setup for event listeners for the edit menu and display buttons
 document.getElementById('editMenuBtn').addEventListener('click', showEditMenu);
 document.getElementById('displayTodosBtn').addEventListener('click', showEditMenu);
-  

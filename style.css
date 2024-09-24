@@ -96,6 +96,16 @@ input[type="text"].status {
     border-radius: 4px;
     color: grey;
  }
+ 
+ .status-dropdown {
+    font-family: Arial, sans-serif;
+    width: calc(100% - 12px); /* Adjusts width for padding */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: grey;
+}
 
  .todo-item.completed {
     background-color: red; /* Light green background for completed tasks */
