@@ -96,32 +96,32 @@ function clearAllTodos() {
 }
 
 // Function to display and handle the edit menu
-let isEditMenuVisible = false; // Flag to track if the edit menu is currently visible
+let isEditMenuVisible = false; // Track if the edit menu is visible
 
 function showEditMenu() {
     const todoList = document.getElementById('todoList');
-    const recentTodoContainer = document.getElementById('recentTodo');
-
+    
+    // Check if we are toggling off the menu
     if (isEditMenuVisible) {
-        todoList.innerHTML = ''; // Hide the edit menu by clearing the todoList container
+        todoList.innerHTML = ''; // Hide the edit menu by clearing the todoList
         isEditMenuVisible = false;
     } else {
-        todoList.innerHTML = '';  // Clear previous list
-        recentTodoContainer.innerHTML = ''; // Hide recent todo
+        todoList.innerHTML = ''; // Clear previous content to start fresh
 
+        // Loop through each todo and display either in editable mode or in display mode
         todos.forEach(todo => {
             const todoItem = document.createElement('div');
-            todoItem.classList.add('todo-item', todo.status);
+            todoItem.classList.add('todo-item');
 
             if (currentEditId === todo.id) {
-                // Editable task menu
-                todoItem.innerHTML = ` 
+                // If the currentEditId matches the todo, show it in edit mode
+                todoItem.innerHTML = `
                     <strong>ID:</strong> ${todo.id} 
                     <input type="text" id="editName${todo.id}" value="${todo.name}" />
-                    <select id="editStatus${todo.id}" class="status-dropdown">
-                        <option value="active" ${todo.status === 'active' ? 'selected' : ''}>Active</option>
-                        <option value="inactive" ${todo.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                    <select id="editStatus${todo.id}">
+                        <option value="Not Complete" ${todo.status === 'Not Complete' ? 'selected' : ''}>Not Complete</option>
                         <option value="complete" ${todo.status === 'complete' ? 'selected' : ''}>Complete</option>
+                        <option value="Other" ${todo.status === 'Other' ? 'selected' : ''}>Other</option>
                     </select>
                     <input type="text" id="editCategory${todo.id}" value="${todo.category}" />
                     <input type="date" id="editDueDate${todo.id}" value="${todo.dueDate}" />
@@ -129,6 +129,7 @@ function showEditMenu() {
                     <button onclick="cancelEdit()">Cancel</button>
                 `;
             } else {
+                // Show todos that are not being edited in normal display mode
                 todoItem.innerHTML = `
                     <strong>ID:</strong> ${todo.id}, <strong>Task:</strong> ${todo.name}, <strong>Status:</strong> ${todo.status}
                     <button onclick="editTodo(${todo.id})">Edit</button>
@@ -137,9 +138,12 @@ function showEditMenu() {
 
             todoList.appendChild(todoItem);
         });
+
+        // Now the edit menu is visible
         isEditMenuVisible = true;
     }
 }
+
 
 
 // Edit a todo

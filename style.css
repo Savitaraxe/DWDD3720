@@ -124,3 +124,36 @@ input[type="date"]::before {
               /* Add some spacing above the icon */
 }
 
+/* Styling for the select dropdown to match the input fields */
+select, .status-dropdown, #status {
+    font-family: Arial, sans-serif;
+    width: calc(100% - 12px); /* Make width consistent with other input fields */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: grey;
+    background-color: white;
+    -webkit-appearance: none; /* Remove default appearance in Webkit browsers */
+    -moz-appearance: none; /* Remove default appearance in Firefox */
+    appearance: none; /* General rule to remove default dropdown arrow */
+    cursor: pointer; /* Make sure the cursor changes to pointer */
+}
+
+/* Optional: Style the dropdown arrow */
+select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%204%205%22><path%20fill%3D%22%23000%22%20d%3D%22M2%205L0%201h4z%22/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+}
+
+/* Focus and hover states for better user interaction */
+select:focus, .status-dropdown:focus, #status:focus {
+    outline: none;
+    border-color: #218838; /* Match with button hover border color */
+}
+
+select:hover, .status-dropdown:hover, #status:hover {
+    border-color: #218838; /* Match hover with other elements */
+}
