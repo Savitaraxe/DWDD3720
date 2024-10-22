@@ -157,3 +157,81 @@ select:focus, .status-dropdown:focus, #status:focus {
 select:hover, .status-dropdown:hover, #status:hover {
     border-color: #218838; /* Match hover with other elements */
 }
+
+
+/* Existing styling for the plus button */
+/* Existing styling for the plus button */
+.category-section {
+    display: flex;
+    align-items: center;
+}
+
+.small-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 3px;
+    font-size: 16px;
+    margin-left: -60px;
+    cursor: pointer;
+    width: 7%;
+    margin-bottom: 10px;
+}
+
+.small-btn:hover {
+    background-color: #45a049;
+}
+
+/* Dropdown Menu for Adding a Category */
+#addCategoryDropdown {
+    display: none; /* Hidden by default */
+    margin-top: 10px;
+    width: calc(100% - 10px); /* Adjust width to fit container */
+    padding: 5px;
+    border: 1px solid black;
+    background-color: rgb(27, 54, 54);
+    margin-bottom: 10px;
+}
+
+#addCategoryDropdown input {
+    margin-bottom: 10px;
+    width: 100%; /* Full width input */
+}
+
+/* Responsive Color Picker Grid */
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15px, 1fr)); /* Auto-fill to fit container width */
+    gap:8px;
+    margin-bottom: 10px;
+}
+
+.color-btn {
+    width: 50%; /* Buttons scale dynamically */
+    height: 25px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: outline 0.2s ease;
+}
+
+.color-btn:hover {
+    outline: 2px solid #ddd;
+}
+
+/* Save button with bottom margin */
+#saveCategoryBtn {
+    margin-bottom: 3%;
+    width: 100%; /* Full width Save button */
+}
+/* Styling for the text inside the category dropdown */
+#addCategoryDropdown p {
+    color: black; /* Set text color to grey */
+    background-color: grey; /* Light grey background for the box */
+    padding: 10px; /* Add padding for spacing inside the box */
+    border: 1px solid #ddd; /* Light grey border for the box */
+    border-radius: 4px; /* Optional: rounded corners for the box */
+    font-size: 14px; /* Adjust font size if needed */
+    margin-bottom: 10px; /* Add margin below for spacing */
+    text-align: center; /* Center the text */
+}

@@ -13,23 +13,60 @@
         <!-- Form to add a new To-Do -->
         <div class="form-group">
             <input type="text" id="name" placeholder="Task Name">
+            
             <select id="status">
                 <option value="">Select Status</option>
                 <option value="Not Complete">Not Complete</option>
                 <option value="complete">Complete</option>
                 <option value="Other">Other</option>
             </select>
-            
-            <input type="text" id="category" placeholder="Category (Work, Home, etc.)">
+
+            <!-- Category dropdown with Add Category button -->
+            <div class="category-section">
+                <select id="category">
+                    <option value="">Select Category</option>
+                    <option value="Work">Work</option>
+                    <option value="Home">Home</option>
+                    <option value="Other">Other</option>
+                </select>
+                <button id="addCategoryBtn" class="small-btn">+</button> <!-- Plus button -->
+            </div>
+
+            <!-- Add Category Dropdown Menu with Color Squares -->
+            <div id="addCategoryDropdown" class="dropdown">
+                <input type="text" id="newCategoryName" placeholder="New Category Name">
+                <p>pick a color to identify your category</p><br>
+
+                <div class="color-picker">
+                    <button class="color-btn" data-color="#ff0000" style="background-color: #ff0000;"></button>
+                    <button class="color-btn" data-color="#00ff00" style="background-color: #00ff00;"></button>
+                    <button class="color-btn" data-color="#0000ff" style="background-color: #0000ff;"></button>
+                    <button class="color-btn" data-color="#ffa500" style="background-color: #ffa500;"></button>
+                    <button class="color-btn" data-color="#800080" style="background-color: #800080;"></button>
+                    <button class="color-btn" data-color="#808080" style="background-color: #808080;"></button>
+                    <button class="color-btn" data-color="#ffff00" style="background-color: #ffff00;"></button>
+                    <button class="color-btn" data-color="#00ffff" style="background-color: #00ffff;"></button>
+                    <button class="color-btn" data-color="#ff00ff" style="background-color: #ff00ff;"></button>
+                    <button class="color-btn" data-color="#000000" style="background-color: #000000;"></button>
+                    <button class="color-btn" data-color="#008080" style="background-color: #008080;"></button> <!-- Teal -->
+                    <button class="color-btn" data-color="#ff69b4" style="background-color: #ff69b4;"></button> <!-- Pink -->
+                    <button class="color-btn" data-color="#a52a2a" style="background-color: #a52a2a;"></button> <!-- Brown -->
+                    <button class="color-btn" data-color="#808000" style="background-color: #808000;"></button> <!-- Olive -->
+                    <button class="color-btn" data-color="#ffffff" style="background-color: #ffffff; border: 1px solid #ddd;"></button>
+                </div>
+                <button id="saveCategoryBtn">Save</button>
+            </div>
+
             <input type="date" id="dueDate" placeholder="Due Date (MM/DD/YYYY)">
             <button id="addTodoBtn">Add To-Do</button>
         </div>
+        
 
         <!-- Button to display all To-Dos -->
         <div class="form-group">
             <button id="displayTodosBtn">Show or Hide All To-Dos</button>
             <br></br>
-            <button id="editMenuBtn">Show or Hide Edit Menu</button> <!-- New Edit Menu Button -->
+            <button id="editMenuBtn">Show or Hide Edit Menu</button>
             <br></br>
             <button id="clearTodosBtn">Clear All To-Dos</button>
             <br></br>
@@ -44,6 +81,8 @@
     <!-- Reference to the external JS file -->
     <script src="Model&Funcs.js"></script>
     <script>
+        let selectedColor = "#ff0000"; // Default selected color
+
         document.getElementById('addTodoBtn').addEventListener('click', function() {
             const name = document.getElementById('name').value;
             const status = document.getElementById('status').value;
@@ -71,6 +110,41 @@
         document.getElementById('clearTodosBtn').addEventListener('click', clearAllTodos);
         document.getElementById('removeCompletedBtn').addEventListener('click', removeCompletedTodos);
         document.getElementById('editMenuBtn').addEventListener('click', showEditMenu);
+
+        // Show/hide the add category dropdown when the "+" button is clicked
+        const addCategoryBtn = document.getElementById("addCategoryBtn");
+        const addCategoryDropdown = document.getElementById("addCategoryDropdown");
+
+        addCategoryBtn.onclick = function() {
+            // Toggle dropdown visibility
+            addCategoryDropdown.style.display = (addCategoryDropdown.style.display === 'block') ? 'none' : 'block';
+        };
+
+        // Handle color selection
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update selected color
+                selectedColor = this.getAttribute('data-color');
+                
+                // Highlight selected button (optional visual feedback)
+                document.querySelectorAll('.color-btn').forEach(b => b.style.outline = 'none');
+                this.style.outline = '2px solid #000'; // Black border to indicate selection
+            });
+        });
+
+        // Add a new category when the user clicks the "Save" button in the dropdown
+        document.getElementById('saveCategoryBtn').addEventListener('click', function() {
+            const newCategoryName = document.getElementById('newCategoryName').value;
+            if (!newCategoryName) {
+                alert("Please enter a category name");
+                return;
+            }
+
+            addNewCategory(newCategoryName, selectedColor);
+
+            // Hide the dropdown after saving
+            addCategoryDropdown.style.display = 'none';
+        });
     </script>
 </body>
 </html>
