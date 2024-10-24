@@ -35,7 +35,7 @@
             <!-- Add Category Dropdown Menu with Color Squares -->
             <div id="addCategoryDropdown" class="dropdown">
                 <input type="text" id="newCategoryName" placeholder="New Category Name">
-                <p>pick a color to identify your category</p><br>
+                <p>Pick a color to identify your category:</p>
 
                 <div class="color-picker">
                     <button class="color-btn" data-color="#ff0000" style="background-color: #ff0000;"></button>
@@ -61,21 +61,20 @@
             <button id="addTodoBtn">Add To-Do</button>
         </div>
         
-
-        <!-- Button to display all To-Dos -->
+        <!-- Buttons to manage the To-Do list -->
         <div class="form-group">
             <button id="displayTodosBtn">Show or Hide All To-Dos</button>
-            <br></br>
+            <br>
             <button id="editMenuBtn">Show or Hide Edit Menu</button>
-            <br></br>
+            <br>
             <button id="clearTodosBtn">Clear All To-Dos</button>
-            <br></br>
+            <br>
             <button id="removeCompletedBtn">Remove Completed To-Dos</button>
         </div>
 
         <!-- Display area for To-Do items -->
         <div id="recentTodo"></div> <!-- For displaying the most recent todo -->
-        <div id="todoList"></div>   <!-- For displaying other todos -->
+        <div id="todoList"></div>   <!-- For displaying all other todos -->
     </div>
 
     <!-- Reference to the external JS file -->
@@ -90,7 +89,7 @@
             const dueDate = document.getElementById('dueDate').value;
 
             if (name && status && category && dueDate) {
-                const newTodo = addTodo(name, status, category, dueDate);
+                addTodo(name, status, category, dueDate);
 
                 // Clear inputs after adding the todo
                 document.getElementById('name').value = '';
@@ -102,11 +101,8 @@
             }
         });
 
-        document.getElementById('displayTodosBtn').addEventListener('click', function() {
-            displayAllTodos();
-        });
-
-        // Event listeners for clear, remove completed, and edit buttons
+        // Event listeners for the buttons
+        document.getElementById('displayTodosBtn').addEventListener('click', displayAllTodos);
         document.getElementById('clearTodosBtn').addEventListener('click', clearAllTodos);
         document.getElementById('removeCompletedBtn').addEventListener('click', removeCompletedTodos);
         document.getElementById('editMenuBtn').addEventListener('click', showEditMenu);
