@@ -235,3 +235,165 @@ select:hover, .status-dropdown:hover, #status:hover {
     margin-bottom: 10px; /* Add margin below for spacing */
     text-align: center; /* Center the text */
 }
+
+
+
+
+/* Styling for the filter dropdown */
+#categoryFilterDropdown {
+    margin-top: 10px;
+    width: calc(100% - 10px); /* Adjust width to fit container */
+    padding: 5px;
+    border: 1px solid black;
+    background-color: rgb(27, 54, 54);
+    margin-bottom: 10px;
+}
+
+#filterCategory {
+    font-family: Arial, sans-serif;
+    width: calc(100% - 12px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: grey;
+}
+
+#filterTodosBtn {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#filterTodosBtn:hover {
+    background-color: #218838;
+}
+
+
+#hideFilterBtn {
+    width: 100%;
+    padding: 10px;
+    background-color: #dc3545; /* Red button */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#hideFilterBtn:hover {
+    background-color: #c82333;
+}
+
+#deleteCategoriesDropdown {
+    margin-top: 10px;
+    width: calc(100% - 10px);
+    padding: 5px;
+    border: 1px solid black;
+    background-color: rgb(27, 54, 54);
+    margin-bottom: 10px;
+}
+
+/* Styling for the delete button (red) */
+.category-item button:nth-child(2) {
+    background-color: #dc3545; /* Red */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px; /* Taller buttons */
+    cursor: pointer;
+    margin-left: 20px; /* Increased gap between delete and edit */
+}
+
+.category-item button:nth-child(2):hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Styling for the edit button (green) */
+.category-item button:nth-child(3) {
+    background-color: #28a745; /* Green */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px; /* Taller buttons */
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.category-item button:nth-child(3):hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Centering the category name text */
+.category-item span {
+    flex-grow: 1;
+    text-align: center; /* Center the text */
+    font-weight: bold; /* Optional for better visibility */
+}
+
+/* Making the category item display as flex for better alignment */
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0; /* Added vertical padding */
+    position: relative; /* Ensure dropdown stays below */
+}
+
+/* Styling for the edit dropdown to appear below both buttons */
+.edit-dropdown {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Ensure the dropdown takes the full width */
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 100%; /* Dropdown appears below the buttons */
+    z-index: 1; /* Ensure it's on top */
+}
+
+.edit-dropdown input {
+    margin-right: 0; /* Remove extra right margin */
+    padding: 5px;
+    width: 100%; /* Full width of the input field */
+}
+
+.edit-dropdown button {
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px; /* Adjust button padding */
+    cursor: pointer;
+    margin: 10px auto 0; /* Center the button horizontally with auto left and right margins */
+    display: block; /* Make the button take its own line */
+    width: 50%; /* Set width to ensure it's not too wide */
+}
+
+.edit-dropdown button:hover {
+    background-color: #218838;
+}
+
+#hideCategoryBtn {
+    width: 100%;
+    padding: 10px;
+    background-color: #dc3545; /* Red button */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 5px; /* Add some space between the Save and Hide buttons */
+}
+
+#hideCategoryBtn:hover {
+    background-color: #c82333; /* Darker red on hover */
+}

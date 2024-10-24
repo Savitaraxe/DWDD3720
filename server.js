@@ -1,153 +1,122 @@
 const express = require('express');
-const cors = require('cors'); // Import CORS middleware
+const cors = require('cors');
+
 const app = express();
-const port = 3001;
+const port = 3001; // Backend server on port 3001
 
-// Enable CORS for all requests (allows your front-end running on localhost:3000 to communicate with your API)
-app.use(cors());
+app.use(cors()); // Enable CORS to allow communication from localhost:3000
+app.use(express.json()); // Middleware to parse incoming JSON
 
-// Middleware to parse JSON bodies in incoming requests
-app.use(express.json());
+// Sample To-Do data (mock database)
+let todos = [];
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
-// In-memory data storage
-let todos = []; // Array to store todos
-let categories = { // Predefined categories with associated colors
+// Sample Categories data (mock database)
+let categories = {
     'Work': 'red',
     'Home': 'blue',
     'Other': 'green'
 };
 
-// Helper function to generate the next To-Do ID
-function getNextTodoId() {
-    return todos.length > 0 ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
-}
-
-// === TODOS Endpoints ===
-
-// GET ALL TODOS
+// GET TODOS - Retrieve all todos
 app.get('/todos', (req, res) => {
-    res.json(todos); // Return the full list of todos as JSON
+    res.json(todos); // Send back the list of todos as JSON
 });
 
-// POST TODO (create a new todo)
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+// POST TODO - Add a new todo
 app.post('/todos', (req, res) => {
-    const { name, status, category, dueDate, color } = req.body;
+    const newTodo = req.body; // Get the new todo from the request body
+    newTodo.id = todos.length + 1; // Assign a new ID to the todo
+    todos.push(newTodo); // Add the new todo to the array
 
-    // Validate required fields
-    if (!name || !category || !dueDate) {
-        return res.status(400).json({ message: 'Missing required fields: name, category, or due date' });
-    }
-
-    // Check if the color is provided in the request body
-    if (!color) {
-        return res.status(400).json({ message: 'Color is required' });
-    }
-
-    // Create a new To-Do
-    const newTodo = {
-        id: getNextTodoId(),
-        name,
-        status: status || 'Not Complete', // Default status if not provided
-        category,
-        dueDate,
-        color // Use the color from the request body
-    };
-
-    todos.push(newTodo); // Add the new To-Do to the in-memory list
-    res.status(201).json(newTodo); // Return the newly created To-Do as JSON
+    res.status(201).json(newTodo); // Send back the newly added todo as a response
 });
 
-// PUT TODO (update a todo by ID)
-app.put('/todos/:id', (req, res) => {
-    const todoId = parseInt(req.params.id);
-    const todo = todos.find(t => t.id === todoId);
-
-    if (!todo) {
-        return res.status(404).json({ message: 'Todo not found' });
-    }
-
-    // Debugging log to check color being passed
-    console.log("Received color in PUT request:", req.body.color);
-
-    // Update the To-Do with the provided values or keep the existing ones
-    todo.name = req.body.name || todo.name;
-    todo.status = req.body.status || todo.status;
-    todo.category = req.body.category || todo.category;
-    todo.dueDate = req.body.dueDate || todo.dueDate;
-    todo.color = req.body.color;  // Ensure color is updated and required
-
-    res.json(todo); // Return the updated To-Do as JSON
+// DELETE ALL TODOS - Clear all todos
+app.delete('/todos', (req, res) => {
+    todos = []; // Clear the todos array
+    res.status(204).send(); // No content response
 });
 
-
-
-
-// DELETE TODO (delete a todo by ID)
+// DELETE TODO BY ID - Delete a specific todo
 app.delete('/todos/:id', (req, res) => {
-    const todoId = parseInt(req.params.id);
-    todos = todos.filter(t => t.id !== todoId); // Remove the To-Do from the list
-    res.json({ message: 'Todo deleted successfully' }); // Return success message
+    const todoId = parseInt(req.params.id); // Get the ID from the request parameters
+    todos = todos.filter(todo => todo.id !== todoId); // Remove the todo with the matching ID
+
+    res.status(204).send(); // Send a "No Content" response to indicate successful deletion
 });
 
-// GET ALL TODOS FOR A SPECIFIC CATEGORY
+
+// PUT TODOS - Update todos (e.g., after removing completed todos)
+app.put('/todos', (req, res) => {
+    todos = req.body; // Update the todos array with the new data from the client
+    res.status(200).json(todos); // Send back the updated list of todos
+});
+
+// PUT TODO BY ID - Update a specific todo
+app.put('/todos/:id', (req, res) => {
+    const todoId = parseInt(req.params.id); // Get the ID from the request parameters
+    const updatedTodo = req.body; // Get the updated todo from the request body
+
+    // Find the index of the todo to be updated
+    const todoIndex = todos.findIndex(todo => todo.id === todoId);
+    if (todoIndex !== -1) {
+        todos[todoIndex] = updatedTodo; // Update the todo in the array
+        res.json(updatedTodo); // Send back the updated todo
+    } else {
+        res.status(404).send('Todo not found'); // Send an error if the todo is not found
+    }
+});
+
 app.get('/todos/category/:category', (req, res) => {
     const category = req.params.category;
-    const filteredTodos = todos.filter(t => t.category === category); // Filter todos by category
-    res.json(filteredTodos); // Return filtered todos as JSON
+    const todosInCategory = todos.filter(todo => todo.category === category);
+    res.json(todosInCategory);
 });
 
-// === CATEGORIES Endpoints ===
-
-// GET ALL CATEGORIES
 app.get('/categories', (req, res) => {
-    res.json(categories); // Return all categories and their colors as JSON
+    const categoryList = Object.entries(categories).map(([name, color]) => ({ name, color }));
+    res.json(categoryList); // Send an array of objects with name and color
 });
 
-// POST CATEGORY (create a new category)
+
 app.post('/categories', (req, res) => {
     const { name, color } = req.body;
-
-    // Validate required fields
     if (!name || !color) {
-        return res.status(400).json({ message: 'Category name and color are required' });
+        return res.status(400).send('Category name and color are required');
     }
-
-    // Add the new category to the in-memory list
     categories[name] = color;
-    res.status(201).json({ name, color }); // Return the newly created category as JSON
+    res.status(201).json({ name, color });
 });
 
-// PUT CATEGORY (update a category's color)
 app.put('/categories/:name', (req, res) => {
-    const categoryName = req.params.name;
-
-    if (!categories[categoryName]) {
-        return res.status(404).json({ message: 'Category not found' });
+    const oldName = req.params.name;
+    const { newName, newColor } = req.body;
+    if (categories[oldName]) {
+        categories[newName] = newColor || categories[oldName];
+        delete categories[oldName];
+        res.json({ name: newName, color: newColor });
+    } else {
+        res.status(404).send('Category not found');
     }
-
-    // Update the category color
-    categories[categoryName] = req.body.color || categories[categoryName];
-    res.json({ name: categoryName, color: categories[categoryName] }); // Return the updated category as JSON
 });
 
-// DELETE CATEGORY (delete a category by name)
+
 app.delete('/categories/:name', (req, res) => {
-    const categoryName = req.params.name;
-
-    if (!categories[categoryName]) {
-        return res.status(404).json({ message: 'Category not found' });
+    const name = req.params.name;
+    if (categories[name]) {
+        delete categories[name];
+        res.status(204).send(); // Success with no content
+    } else {
+        res.status(404).send('Category not found');
     }
-
-    // Delete the category from the list
-    delete categories[categoryName];
-    res.json({ message: `Category '${categoryName}' deleted successfully` }); // Return success message
 });
 
-// Start the server on the specified port
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+
+
+
+

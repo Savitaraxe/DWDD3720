@@ -35,7 +35,7 @@
             <!-- Add Category Dropdown Menu with Color Squares -->
             <div id="addCategoryDropdown" class="dropdown">
                 <input type="text" id="newCategoryName" placeholder="New Category Name">
-                <p>Pick a color to identify your category:</p>
+                <p>pick a color to identify your category</p><br>
 
                 <div class="color-picker">
                     <button class="color-btn" data-color="#ff0000" style="background-color: #ff0000;"></button>
@@ -55,26 +55,56 @@
                     <button class="color-btn" data-color="#ffffff" style="background-color: #ffffff; border: 1px solid #ddd;"></button>
                 </div>
                 <button id="saveCategoryBtn">Save</button>
+                <button id="hideCategoryBtn">Hide</button> <!-- New Hide button -->
+
             </div>
 
             <input type="date" id="dueDate" placeholder="Due Date (MM/DD/YYYY)">
             <button id="addTodoBtn">Add To-Do</button>
         </div>
         
-        <!-- Buttons to manage the To-Do list -->
+
+        <!-- Button to display all To-Dos -->
         <div class="form-group">
             <button id="displayTodosBtn">Show or Hide All To-Dos</button>
-            <br>
-            <button id="editMenuBtn">Show or Hide Edit Menu</button>
-            <br>
+            <br></br>
+
+            <div class="form-group">
+                <button id="showCategoryFilterBtn">Filter Todo's By Category</button>
+                
+                <!-- Category dropdown to filter by category -->
+                <div id="categoryFilterDropdown" class="dropdown" style="display: none;">
+                    <select id="filterCategory">
+                        <option value="">Select Category</option>
+                        <!-- Dynamic category options will be added by JavaScript -->
+                    </select>
+                    <button id="filterTodosBtn">Filter</button>
+                    <br></br>
+                    <button id="hideFilterBtn">Hide</button>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button id="showDeleteCategoriesBtn">Change Any Category</button>
+                
+                <!-- Dropdown to display all categories with delete buttons -->
+                <div id="deleteCategoriesDropdown" class="dropdown" style="display: none;">
+                    <!-- Categories and delete buttons will be dynamically inserted here -->
+                </div>
+            </div>
+            
+
+            <button id="editMenuBtn">Edit Any Todo</button>
+            <br></br>
             <button id="clearTodosBtn">Clear All To-Dos</button>
-            <br>
+            <br></br>
             <button id="removeCompletedBtn">Remove Completed To-Dos</button>
         </div>
 
         <!-- Display area for To-Do items -->
         <div id="recentTodo"></div> <!-- For displaying the most recent todo -->
-        <div id="todoList"></div>   <!-- For displaying all other todos -->
+        <div id="todoList"></div>   <!-- For displaying other todos -->
     </div>
 
     <!-- Reference to the external JS file -->
@@ -89,7 +119,7 @@
             const dueDate = document.getElementById('dueDate').value;
 
             if (name && status && category && dueDate) {
-                addTodo(name, status, category, dueDate);
+                const newTodo = addTodo(name, status, category, dueDate);
 
                 // Clear inputs after adding the todo
                 document.getElementById('name').value = '';
@@ -101,8 +131,11 @@
             }
         });
 
-        // Event listeners for the buttons
-        document.getElementById('displayTodosBtn').addEventListener('click', displayAllTodos);
+        document.getElementById('displayTodosBtn').addEventListener('click', function() {
+            displayAllTodos();
+        });
+
+        // Event listeners for clear, remove completed, and edit buttons
         document.getElementById('clearTodosBtn').addEventListener('click', clearAllTodos);
         document.getElementById('removeCompletedBtn').addEventListener('click', removeCompletedTodos);
         document.getElementById('editMenuBtn').addEventListener('click', showEditMenu);
@@ -135,12 +168,15 @@
                 alert("Please enter a category name");
                 return;
             }
-
             addNewCategory(newCategoryName, selectedColor);
-
-            // Hide the dropdown after saving
-            addCategoryDropdown.style.display = 'none';
         });
+
+        // Hide the add category dropdown when the "save" button is clicked
+document.getElementById('saveCategoryBtn').addEventListener('click', function() {
+    addCategoryDropdown.style.display = 'none'; // Hide the dropdown
+});
+
+
     </script>
 </body>
 </html>
